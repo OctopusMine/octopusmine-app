@@ -7,154 +7,163 @@
 <title>OctopusMine</title>
 <script src="https://telegram.org/js/telegram-web-app.js"></script>
 <style>
-*{box-sizing:border-box}
-body{
- margin:0;background:#071426;color:white;
- font-family:Arial,sans-serif;padding:18px;
+body {
+  margin: 0;
+  padding: 20px;
+  background: #061827;
+  color: white;
+  font-family: Arial, sans-serif;
+  text-align: center;
 }
-.header{text-align:center;padding:20px}
-.logo{font-size:65px}
-h1{color:#35d5e9;margin:8px}
-.sub{color:#91a9bd;font-size:13px}
-.balance{
- background:linear-gradient(135deg,#123d62,#126c82);
- border-radius:20px;padding:25px;text-align:center;
- margin:15px 0;
+.card {
+  background: #102d40;
+  padding: 20px;
+  margin: 15px 0;
+  border-radius: 15px;
 }
-.balance small{color:#b6dce8}
-.amount{font-size:32px;font-weight:bold;margin:12px}
-.coin{color:#45e6d1}
-button{
- width:100%;padding:16px;border:0;border-radius:13px;
- background:#16bfd0;color:#041a2a;font-size:16px;
- font-weight:bold;margin:8px 0;cursor:pointer;
+h1 { color: #45d8e7; }
+.coins {
+  font-size: 35px;
+  color: #45d8e7;
+  font-weight: bold;
 }
-button:disabled{opacity:.6}
-.card{
- background:#10243a;padding:18px;border-radius:16px;
- margin:14px 0;
+button {
+  background: #00aebd;
+  color: white;
+  border: 0;
+  padding: 14px;
+  width: 100%;
+  border-radius: 10px;
+  font-size: 16px;
+  margin-top: 10px;
 }
-h3{margin-top:0;color:#45d8e7}
-.grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}
-.grid button{background:#193a54;color:white}
-.ad{
- border:1px dashed #4b829b;border-radius:12px;
- padding:20px;text-align:center;color:#a7c6d7;
+button:disabled {
+  background: #526773;
 }
-.footer{text-align:center;color:#7795a9;font-size:12px;padding:20px}
+#timer {
+  color: #45d8e7;
+  margin-top: 15px;
+}
 </style>
 </head>
 <body>
 
-<div class="header">
- <div class="logo">🐙</div>
- <h1>OctopusMine</h1>
- <div class="sub">MINE • EARN • INVITE • REWARD</div>
-</div>
+<h1>🐙 OctopusMine</h1>
+<p>Welcome to OctopusMine!</p>
 
-<div class="balance">
- <small>YOUR TOTAL COINS</small>
- <div class="amount"><span id="coins">0</span> 🪙</div>
- <small>Mining Rewards</small>
+<div class="card">
+  <p>YOUR DEMO BALANCE</p>
+  <div class="coins" id="coins">0</div>
+  <p>Demo Coins</p>
 </div>
 
 <div class="card">
- <h3>⛏️ Mining Center</h3>
- <p id="status">Ready to start mining!</p>
- <button id="mine" onclick="startMining()">START MINING</button>
- <p id="timer" style="text-align:center;color:#45d8e7"></p>
+  <h3>⛏️ Start Mining</h3>
+  <p id="status">Ready to start mining!</p>
+  <button id="mine" onclick="startMining()">START MINING</button>
+  <p id="timer">Earn 60 demo coins every 2 hours</p>
 </div>
 
 <div class="card">
- <h3>🎬 Video Ads</h3>
- <div class="ad">Rewarded Video Ad Slot<br>
- <small>Ad provider integration required</small></div>
- <button onclick="alert('Video ads will be available after approved ad network integration.')">
- WATCH VIDEO ADS
- </button>
+  <h3>📺 Video Ads</h3>
+  <p>Video ad feature coming soon.</p>
 </div>
 
 <div class="card">
- <h3>🖼️ Banner Advertisement</h3>
- <div class="ad">Banner Ad Placement<br>
- <small>Approved ad network will appear here</small></div>
+  <h3>🖼️ Banner Ads</h3>
+  <p>Banner ad feature coming soon.</p>
 </div>
 
 <div class="card">
- <h3>👥 Invite Friends</h3>
- <p>Invite friends and grow your mining community!</p>
- <button onclick="shareReferral()">INVITE FRIENDS</button>
+  <h3>👥 Referral</h3>
+  <button onclick="shareReferral()">SHARE REFERRAL</button>
 </div>
 
 <div class="card">
- <h3>💰 My Account</h3>
- <div class="grid">
-  <button onclick="alert('Balance: '+coins+' coins')">My Balance</button>
-  <button onclick="alert('Reward history coming soon')">History</button>
-  <button onclick="alert('Withdrawal system is not connected yet')">Withdraw</button>
-  <button onclick="alert('Referral statistics coming soon')">Referrals</button>
- </div>
-</div>
-
-<div class="footer">
- OctopusMine © 2026<br>
- Mining • Rewards • Community
+  <h3>👤 Account</h3>
+  <button onclick="alert('Demo balance only. No real withdrawal.')">My Balance</button>
+  <button onclick="alert('Demo history coming soon.')">History</button>
 </div>
 
 <script>
-let coins=Number(localStorage.getItem('octopus_coins')||0);
-let mining=Number(localStorage.getItem('octopus_mining')||0);
-let duration = 2 * 60 * 60 * 1000;
+let coins = Number(localStorage.getItem('octopus_coins')) || 0;
 
-function update(){
- document.getElementById('coins').textContent=coins;
- localStorage.setItem('octopus_coins',coins);
- let remaining=duration-(Date.now()-mining);
- if(mining && remaining>0){
-  document.getElementById('mine').disabled=true;
-  document.getElementById('status').textContent='Mining in progress...';
-  let h=Math.floor(remaining/3600000);
-  let m=Math.floor(remaining%3600000/60000);
-  let s=Math.floor(remaining%60000/1000);
-  document.getElementById('timer').textContent=
-  'Time left: '+h+'h '+m+'m '+s+'s';
- }else{
-  if(mining){
-   coins+=60;
-   localStorage.setItem('octopus_coins',coins);
-   localStorage.setItem('octopus_mining','0');
-   mining=0;
+// Reset the old mining timer only once
+if (!localStorage.getItem('octopus_timer_reset_v2')) {
+  localStorage.setItem('octopus_mining', '0');
+  localStorage.setItem('octopus_timer_reset_v2', '1');
+}
+
+let mining = Number(localStorage.getItem('octopus_mining')) || 0;
+
+// Real demo duration: 2 hours
+const duration = 2 * 60 * 60 * 1000;
+
+function update() {
+  let remaining = duration - (Date.now() - mining);
+
+  if (mining && remaining > 0) {
+    document.getElementById('mine').disabled = true;
+    document.getElementById('status').textContent =
+      'Mining in progress...';
+
+    let h = Math.floor(remaining / 3600000);
+    let m = Math.floor(remaining % 3600000 / 60000);
+    let s = Math.floor(remaining % 60000 / 1000);
+
+    document.getElementById('timer').textContent =
+      'Time left: ' + h + 'h ' + m + 'm ' + s + 's';
+
+  } else {
+    if (mining) {
+      coins += 60;
+      localStorage.setItem('octopus_coins', coins);
+      localStorage.setItem('octopus_mining', '0');
+      mining = 0;
+    }
+
+    document.getElementById('mine').disabled = false;
+    document.getElementById('status').textContent =
+      'Ready to start mining!';
+
+    document.getElementById('timer').textContent =
+      'Earn 60 demo coins every 2 hours';
   }
-  document.getElementById('mine').disabled=false;
-  document.getElementById('status').textContent='Ready to start mining!';
-  document.getElementById('timer').textContent='Earn 60 demo coins every 2 hours';
-  document.getElementById('coins').textContent=coins;
- }
+
+  document.getElementById('coins').textContent = coins;
 }
-function startMining(){
- if(mining)return;
- mining=Date.now();
- localStorage.setItem('octopus_mining',mining);
- update();
+
+function startMining() {
+  if (mining) return;
+
+  mining = Date.now();
+  localStorage.setItem('octopus_mining', mining);
+  update();
 }
-function shareReferral(){
- let url=window.location.href;
- if(window.Telegram && Telegram.WebApp){
-  Telegram.WebApp.openTelegramLink(
-   'https://t.me/share/url?url='+encodeURIComponent(url)+
-   '&text='+encodeURIComponent('Join OctopusMine!')
-  );
- }else{
-  alert('Open this app inside Telegram to share.');
- }
+
+function shareReferral() {
+  let url = window.location.href;
+
+  if (window.Telegram && Telegram.WebApp) {
+    Telegram.WebApp.openTelegramLink(
+      'https://t.me/share/url?url=' +
+      encodeURIComponent(url) +
+      '&text=' +
+      encodeURIComponent('Join OctopusMine!')
+    );
+  } else {
+    alert('Open this app inside Telegram to share.');
+  }
 }
+
 update();
-setInterval(update,1000);
-if(window.Telegram && Telegram.WebApp){
- Telegram.WebApp.ready();
- Telegram.WebApp.expand();
+setInterval(update, 1000);
+
+if (window.Telegram && Telegram.WebApp) {
+  Telegram.WebApp.ready();
+  Telegram.WebApp.expand();
 }
 </script>
+
 </body>
-  </html>
-   
+</html>
